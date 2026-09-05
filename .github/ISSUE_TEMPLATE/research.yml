@@ -1,0 +1,41 @@
+name: 技术实验
+description: 提议或记录一个可重复的算法、质量或性能实验
+title: "[Research] "
+labels:
+  - research
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: 实验问题
+      description: 本实验要改变哪一个判断？
+    validations:
+      required: true
+  - type: textarea
+    id: inputs
+    attributes:
+      label: 输入与授权
+      description: 样本类型、来源、公开权限和合成参数。
+    validations:
+      required: true
+  - type: textarea
+    id: method
+    attributes:
+      label: 对比方法
+      description: 需要固定的模型、版本、蒙版、输出和硬件参数。
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: 验收标准
+      description: 画质、时序、音频、速度、内存和显存标准。
+    validations:
+      required: true
+  - type: textarea
+    id: licensing
+    attributes:
+      label: 许可证影响
+      description: 代码、权重、数据和传递依赖是否允许研究、分发和商业使用。
+    validations:
+      required: true

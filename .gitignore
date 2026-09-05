@@ -1,0 +1,55 @@
+# Local media and generated outputs
+input/
+inputs/
+output/
+outputs/
+temp/
+tmp/
+cache/
+models/
+weights/
+*.mp4
+*.mov
+*.mkv
+*.avi
+*.webm
+*.m4v
+
+# Allow intentionally public tiny fixtures when added later
+!tests/fixtures/**
+
+# Credentials and local configuration
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.pfx
+*.p12
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Node and desktop builds
+node_modules/
+dist/
+build/
+release/
+.vite/
+
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+crash-reports/

@@ -1,0 +1,48 @@
+name: Bug报告
+description: 报告可复现的程序、处理或导出问题
+title: "[Bug] "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: 请勿上传无权公开的素材、密钥、账号信息或包含私人路径的完整日志。
+  - type: textarea
+    id: summary
+    attributes:
+      label: 问题摘要
+      description: 一句话说明发生了什么。
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+      description: 按顺序列出操作和参数。
+    validations:
+      required: true
+  - type: textarea
+    id: media
+    attributes:
+      label: 素材技术信息
+      description: 格式、分辨率、帧率、时长、水印位置和透明度；不要上传无授权素材。
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Windows与硬件
+      description: Windows版本、CPU、内存、显卡、显存和驱动版本。
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 预期与实际结果
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: 已脱敏日志
+      description: 删除用户名、私人绝对路径、Token、Cookie和账号信息。
