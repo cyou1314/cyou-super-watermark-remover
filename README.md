@@ -68,7 +68,7 @@
 
 `v0.0.x-research`：只建立可复现的测试与技术结论，不承诺生产可用性。
 
-首条固定矩形快速插值基线已经跑通。它处理10秒样本只需约0.77秒，但复杂背景会形成明显涂抹矩形，因此只作为后续方案必须超过的速度/质量下限，不作为产品处理引擎。
+前三条固定矩形基线已经跑通。FFmpeg `delogo`、OpenCV Telea和OpenCV Navier–Stokes都能快速清除文字，但复杂背景均会形成明显涂抹矩形，因此只作为后续方案必须超过的速度/质量下限，不作为产品处理引擎。
 
 研究脚本示例：
 
@@ -80,6 +80,20 @@
 ```
 
 脚本拒绝覆盖原文件或已有输出，使用H.264高质量编码并直接复制原音频。运行前需自行安装带`delogo`和`libx264`的FFmpeg构建；实际分发许可必须按构建选项重新审计。
+
+OpenCV研究基线：
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements-research.txt
+.\.venv\Scripts\python.exe .\scripts\run-opencv-inpaint-baseline.py `
+  --input 'D:\media\input.mp4' `
+  --output 'D:\media\output-telea.mp4' `
+  --x 100 --y 100 --width 120 --height 40 `
+  --method telea --radius 3
+```
+
+OpenCV脚本只修复蒙版附近的小裁剪区，再把结果写回原帧；这样可以保留基线算法效果并减少无意义的整帧计算。`--method`支持`telea`和`ns`。
 
 ## 名称
 
