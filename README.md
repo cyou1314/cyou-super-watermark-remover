@@ -95,6 +95,23 @@ python -m venv .venv
 
 OpenCV脚本只修复蒙版附近的小裁剪区，再把结果写回原帧；这样可以保留基线算法效果并减少无意义的整帧计算。`--method`支持`telea`和`ns`。
 
+对于固定的亮色文字水印，可以先从整段视频建立紧贴字形的形状蒙版：
+
+```powershell
+.\.venv\Scripts\python.exe .\scripts\build-static-bright-mask.py `
+  --input 'D:\media\input.mp4' `
+  --output 'D:\media\watermark-mask.png' `
+  --x 100 --y 100 --width 120 --height 40
+
+.\.venv\Scripts\python.exe .\scripts\run-opencv-inpaint-baseline.py `
+  --input 'D:\media\input.mp4' `
+  --output 'D:\media\output-shape-mask.mp4' `
+  --mask 'D:\media\watermark-mask.png' `
+  --method telea --radius 3
+```
+
+自动形状蒙版只适用于在整段视频里位置固定、持续偏亮且低饱和的文字或Logo；彩色、半透明、闪烁或会变化的水印不能假定适用。
+
 ## 名称
 
 - 产品名：`cyou`
