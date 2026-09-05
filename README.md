@@ -110,6 +110,20 @@ OpenCV脚本只修复蒙版附近的小裁剪区，再把结果写回原帧；�
 
 对10—15秒、原片本身为H.265且播放设备支持HEVC的视频，当前优先推荐高保真模式；需要更广泛播放器兼容时再使用H.264模式。
 
+如果逐帧修复后仍能看到闪烁或随帧变化的补画痕迹，可以在相同固定形状蒙版上运行光流对齐的时间一致性实验：
+
+```powershell
+.\.venv\Scripts\python.exe .\scripts\run-opencv-temporal-inpaint.py `
+  --input 'D:\media\input.mp4' `
+  --output 'D:\media\output-temporal-high-fidelity.mp4' `
+  --mask 'D:\media\watermark-mask.png' `
+  --method telea --radius 3 `
+  --temporal-window 3 --temporal-strength 0.65 `
+  --video-codec h265 --crf 12 --preset medium
+```
+
+该脚本先逐帧修复，再把前后帧光流对齐后做稳健时间融合。它只修改蒙版内像素，并在相邻画面对齐误差超过阈值时拒绝参与融合。当前实现属于研究基线，不代表可以恢复水印遮挡的真实原像素；运动剧烈、镜头切换或关键主体被遮挡时仍需人工检查。
+
 对于固定的亮色文字水印，可以先从整段视频建立紧贴字形的形状蒙版：
 
 ```powershell
