@@ -28,6 +28,23 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--mask", type=Path)
     parser.add_argument("--method", required=True, choices=("telea", "ns"))
     parser.add_argument("--radius", type=float, default=3.0)
+    parser.add_argument("--video-codec", choices=("h264", "h265"), default="h264")
+    parser.add_argument("--crf", type=int, default=18)
+    parser.add_argument(
+        "--preset",
+        choices=(
+            "ultrafast",
+            "superfast",
+            "veryfast",
+            "faster",
+            "fast",
+            "medium",
+            "slow",
+            "slower",
+            "veryslow",
+        ),
+        default="fast",
+    )
     return parser.parse_args()
 
 
@@ -78,6 +95,8 @@ def main() -> int:
     args = parse_args()
     if args.radius <= 0:
         raise ValueError("Inpainting radius must be greater than zero.")
+    if not 0 <= args.crf <= 51:
+        raise ValueError("CRF must be between 0 and 51.")
 
     ffmpeg = shutil.which("ffmpeg")
     ffprobe = shutil.which("ffprobe")
@@ -139,6 +158,7 @@ def main() -> int:
     crop_mask = mask[crop_y0:crop_y1, crop_x0:crop_x1]
 
     algorithm = cv2.INPAINT_TELEA if args.method == "telea" else cv2.INPAINT_NS
+    encoder = "libx264" if args.video_codec == "h264" else "libx265"
     command = [
         ffmpeg,
         "-hide_banner",
@@ -161,19 +181,21 @@ def main() -> int:
         "-map",
         "1:a?",
         "-c:v",
-        "libx264",
+        encoder,
         "-crf",
-        "18",
+        str(args.crf),
         "-preset",
-        "fast",
+        args.preset,
         "-pix_fmt",
         "yuv420p",
         "-c:a",
         "copy",
         "-movflags",
         "+faststart",
-        str(output_path),
     ]
+    if args.video_codec == "h265":
+        command.extend(("-tag:v", "hvc1"))
+    command.append(str(output_path))
 
     process = subprocess.Popen(
         command,
@@ -243,6 +265,13 @@ def main() -> int:
         "peak_combined_rss_bytes": peak_combined_rss,
         "output_bytes": output_path.stat().st_size,
         "opencv_version": cv2.__version__,
+        "video_encoder": {
+            "codec": args.video_codec,
+            "ffmpeg_encoder": encoder,
+            "crf": args.crf,
+            "preset": args.preset,
+            "pixel_format": "yuv420p",
+        },
         "output_probe": output_probe,
     }
     print(json.dumps(result, ensure_ascii=False, indent=2))

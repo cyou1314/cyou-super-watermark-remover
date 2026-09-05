@@ -95,7 +95,20 @@ python -m venv .venv
 
 OpenCV脚本只修复蒙版附近的小裁剪区，再把结果写回原帧；这样可以保留基线算法效果并减少无意义的整帧计算。`--method`支持`telea`和`ns`。
 
-只要修改了视频像素，普通MP4就必须重新编码视频流，无法像音频一样直接复制。当前研究输出使用H.264 CRF 18；它会产生轻微有损压缩，但在P001水印区域外测得PSNR约43.9–44.7 dB、SSIM约0.9914–0.9931。输出文件变大不代表无损，也不代表画质比原片更高。
+只要修改了视频像素，普通MP4就必须重新编码视频流，无法像音频一样直接复制。当前提供两种研究输出：H.264 CRF 18兼容模式，以及保持原H.265编码类型的CRF 12高保真模式。P001的高保真模式在水印外测得PSNR约44.8–45.2 dB、SSIM约0.9952–0.9957；它仍是有损重编码，输出文件变大不代表无损，也不代表画质比原片更高。
+
+高保真输出示例：
+
+```powershell
+.\.venv\Scripts\python.exe .\scripts\run-opencv-inpaint-baseline.py `
+  --input 'D:\media\input.mp4' `
+  --output 'D:\media\output-high-fidelity.mp4' `
+  --mask 'D:\media\watermark-mask.png' `
+  --method telea --radius 3 `
+  --video-codec h265 --crf 12 --preset medium
+```
+
+对10—15秒、原片本身为H.265且播放设备支持HEVC的视频，当前优先推荐高保真模式；需要更广泛播放器兼容时再使用H.264模式。
 
 对于固定的亮色文字水印，可以先从整段视频建立紧贴字形的形状蒙版：
 
