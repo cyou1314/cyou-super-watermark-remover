@@ -68,6 +68,19 @@
 
 `v0.0.x-research`：只建立可复现的测试与技术结论，不承诺生产可用性。
 
+首条固定矩形快速插值基线已经跑通。它处理10秒样本只需约0.77秒，但复杂背景会形成明显涂抹矩形，因此只作为后续方案必须超过的速度/质量下限，不作为产品处理引擎。
+
+研究脚本示例：
+
+```powershell
+.\scripts\run-delogo-baseline.ps1 `
+  -InputPath 'D:\media\input.mp4' `
+  -OutputPath 'D:\media\output-delogo.mp4' `
+  -X 100 -Y 100 -Width 120 -Height 40
+```
+
+脚本拒绝覆盖原文件或已有输出，使用H.264高质量编码并直接复制原音频。运行前需自行安装带`delogo`和`libx264`的FFmpeg构建；实际分发许可必须按构建选项重新审计。
+
 ## 名称
 
 - 产品名：`cyou`
